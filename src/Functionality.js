@@ -1,6 +1,7 @@
 import { Component } from "react";
 import reactDom from "react-dom";
 import React from "react";
+import { Children } from "react";
 export default class Functionality extends Component {
   constructor(props) {
     super(props);
@@ -145,7 +146,6 @@ class Basket extends Component {
     return (
       <ul>
         {this.state.shopping.map((product) => {
-          console.log(product);
           return (
             <div style={{ display: "flex" }}>
               <button
