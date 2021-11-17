@@ -8,13 +8,35 @@ export default class Functionality extends Component {
       shopping: [],
     };
   }
-  addToShoppingList = (e) => {
-    //let basket = this.state.shopping;
 
-    if (!this.state.shopping.find((element) => element.name === e.target.id)) {
-      this.state.shopping.push({ name: e.target.id, count: 1 });
+  clickedTrush = () => {
+    this.state.shopping.length = 0;
+  };
+
+  removeFromShoppingList = (e) => {
+    let foodName = e.target.id;
+    const foundItem = this.state.shopping.find(
+      (element) => element.name === foodName
+    );
+    if (foundItem.count > 0) {
+      this.state.shopping[this.state.shopping.indexOf(foundItem)] = {
+        name: foodName,
+        count: foundItem.count - 1,
+      };
     } else {
-      let foodName = e.target.id;
+      document.getElementById(foodName).parentElement.remove();
+    }
+  };
+
+  addToShoppingList = (e) => {
+    if (
+      !this.state.shopping.find(
+        (element) => element.name === e.target.id.split("-")[0]
+      )
+    ) {
+      this.state.shopping.push({ name: e.target.id.split("-")[0], count: 1 });
+    } else {
+      let foodName = e.target.id.split("-")[0];
       const foundItem = this.state.shopping.find(
         (element) => element.name === foodName
       );
@@ -50,8 +72,12 @@ export default class Functionality extends Component {
         >
           <header>
             <h3>Basket</h3>
+            <button onClick={this.clickedTrush}>Trush</button>
           </header>
-          <Basket basket={this.state.shopping} />
+          <Basket
+            removeFromShoppingList={this.removeFromShoppingList}
+            basket={this.state.shopping}
+          />
         </div>
       </div>
     );
@@ -95,7 +121,7 @@ class Groceries extends Component {
               <button
                 onClick={this.props.addToShopping}
                 style={{ float: "left" }}
-                id={product}
+                id={product + "-product"}
               >
                 +
               </button>
@@ -122,7 +148,11 @@ class Basket extends Component {
           console.log(product);
           return (
             <div style={{ display: "flex" }}>
-              <button style={{ float: "left" }} id={product.name}>
+              <button
+                onClick={this.props.removeFromShoppingList}
+                style={{ float: "left" }}
+                id={product.name}
+              >
                 -
               </button>
               <span style={{ marginLeft: "100px" }}>{product.name}</span>
