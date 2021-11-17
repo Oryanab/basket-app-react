@@ -10,13 +10,25 @@ export default class Functionality extends Component {
   }
   addToShoppingList = (e) => {
     //let basket = this.state.shopping;
-    this.state.shopping.push(e.target.id);
+
+    if (!this.state.shopping.find((element) => element.name === e.target.id)) {
+      this.state.shopping.push({ name: e.target.id, count: 1 });
+    } else {
+      let foodName = e.target.id;
+      const foundItem = this.state.shopping.find(
+        (element) => element.name === foodName
+      );
+      this.state.shopping[this.state.shopping.indexOf(foundItem)] = {
+        name: foodName,
+        count: foundItem.count + 1,
+      };
+    }
+
     this.setState(() => {
       return {
-        basket: this.state.shopping,
+        shopping: this.state.shopping,
       };
     });
-    console.log(this.state.shopping);
   };
   render() {
     return (
@@ -110,10 +122,12 @@ class Basket extends Component {
           console.log(product);
           return (
             <div style={{ display: "flex" }}>
-              <button style={{ float: "left" }} id={product}>
+              <button style={{ float: "left" }} id={product.name}>
                 -
               </button>
-              <span style={{ marginLeft: "100px" }}>{product}</span>
+              <span style={{ marginLeft: "100px" }}>{product.name}</span>
+              <span style={{ marginLeft: "2px" }}>X</span>
+              <span style={{ marginLeft: "2px" }}>{product.count}</span>
             </div>
           );
         })}
